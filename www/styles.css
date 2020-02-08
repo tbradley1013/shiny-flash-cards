@@ -1,0 +1,19 @@
+.question-card {
+  width:80%;
+  height:600px;
+  background-color:#0000ff;
+  color:white;
+  font-size: 8em;
+  text-align: center;
+  margin: 0 auto;
+}
+
+
+.answers-card {
+  width:80%;
+  height:600px;
+  background-color:gray;
+  color:black;
+  font-size: 3em;
+  margin: 0 auto;
+}
