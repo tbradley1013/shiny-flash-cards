@@ -1,6 +1,7 @@
 library(tidyverse)
 library(shiny)
 library(shinyjs)
+library(shinythemes)
 
 dat <- tribble(
   ~question, ~answer,
@@ -13,26 +14,49 @@ ui <- tagList(
   useShinyjs(),
   
   fluidPage(
+    theme = shinytheme("journal"),
     includeCSS("www/styles.css"),
-    actionButton(
-      inputId = "show_answer",
-      label = "Show Answer",
-      class = "btn-primary"
-    ),
-    shinyjs::hidden(
+    div(
       actionButton(
-        inputId = "back_to_question",
-        label = "Back to Question",
-        class = "btn-primary"
-      )
-    ),
-    actionButton(
-      inputId = "next_question",
-      label = "Next Question",
-      class = "btn-error"
+        inputId = "show_answer",
+        label = "Show Answer",
+        class = "btn-primary",
+        width = "100%"
+      ),
+      shinyjs::hidden(
+        actionButton(
+          inputId = "back_to_question",
+          label = "Back to Question",
+          class = "btn-primary",
+          width = "100%"
+        )
+      ),
+      # actionButton(
+      #   inputId = "next_question",
+      #   label = "Next Question",
+      #   class = "btn-error",
+      #   width = "45%"
+      # ),
+      style = "width:200px;margin:0 auto;"
     ),
     br(),
-    uiOutput("card")
+    uiOutput("card"),
+    br(),
+    div(
+      actionButton(
+        inputId = "know_it",
+        label = "I know it!",
+        class = "btn-success",
+        width = "45%" 
+      ),
+      actionButton(
+        inputId = "next_question",
+        label = "Next Question",
+        class = "btn-danger",
+        width = "45%"
+      ),
+      style = "width:400px;margin: 0 auto;"
+    )
   )
 )
 
