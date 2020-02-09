@@ -4,6 +4,7 @@ library(shinyjs)
 library(shinythemes)
 library(readxl)
 library(janitor)
+library(shinyalert)
 
 # dat <- tribble(
 #   ~question, ~answer,
@@ -17,7 +18,7 @@ dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>%
 
 ui <- tagList(
   useShinyjs(),
-  
+  useShinyalert(),
   fluidPage(
     theme = shinytheme("journal"),
     includeCSS("www/styles.css"),
@@ -72,13 +73,18 @@ server <- function(input, output, session){
   
   rv <- reactiveValues(
     dat = dat,
-    n_cards = length(unique(dat$question)),
-    n = 1,
+    card_idx = 1:length(unique(dat$question)),
     answer_visible = FALSE,
-    question_visible = TRUE
+    question_visible = TRUE,
+    card_keep = numeric(0),
+    card_know = numeric(0)
     # answer_click = 0,
     # question_click = 1
   )
+  
+  observe({
+    rv$n <- sample(rv$card_idx, 1)
+  })
   
   card_html <- reactive({
     rv$dat %>% 
@@ -111,7 +117,7 @@ server <- function(input, output, session){
   })
   
   output$card <- renderUI({
-    rv$n
+    req(rv$n)
     # browser()
     selected_card <- card_html()[rv$n,]
     if (rv$question_visible){
@@ -143,10 +149,42 @@ server <- function(input, output, session){
       rv$question_visible <- TRUE
     }
     
-    if (rv$n < rv$n_cards){
-      rv$n <- rv$n + 1
+    rv$card_keep <- c(rv$card_keep, rv$n)
+    rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
+    
+    if (length(rv$card_idx) > 0){
+      rv$n <- sample(rv$card_idx, 1)
     } else {
-      rv$n <- 1
+      rv$card_idx <- rv$card_keep
+      rv$card_keep <- numeric(0)
+      rv$n <- sample(rv$card_idx, 1)
+    }
+    
+    shinyjs::show("show_answer")
+    shinyjs::hide("back_to_question")
+  })
+  
+  observeEvent(input$know_it, {
+    if (rv$answer_visible){
+      rv$answer_visible <- FALSE
+      rv$question_visible <- TRUE
+    }
+    
+    rv$card_know <- c(rv$card_know, rv$n)
+    rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
+    
+    if (length(rv$card_idx) > 0){
+      rv$n <- sample(rv$card_idx, 1)
+    } else {
+      if (length(rv$card_keep) > 0){
+        rv$card_idx <- rv$card_keep
+        rv$card_keep <- numeric(0)
+        rv$n <- sample(rv$card_idx, 1)
+      } else {
+        shinyalert::shinyalert(title = "Congrats!", text = "You have indicated that you know all of the cards! The deck will now be reset!", type = "success")
+        rv$card_idx <- rv$card_know
+        rv$n <- sample(rv$card_idx, 1)
+      }
     }
     
     shinyjs::show("show_answer")
