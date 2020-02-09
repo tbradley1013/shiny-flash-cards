@@ -13,7 +13,7 @@
 document.onkeydown = function (e) {
   e = e || window.event;
   var key = (e.which || e.keyCode),
-  pressed = {13:'next_question', 78:'show_answer', 66:'back_to_question'};
+  pressed = {68:'next_question', 65:'show_answer', 83:'back_to_question', 87:'know_it'};
 				
   if( typeof pressed[ key ] === 'undefined' )
     return;

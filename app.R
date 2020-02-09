@@ -6,15 +6,9 @@ library(readxl)
 library(janitor)
 library(shinyalert)
 
-# dat <- tribble(
-#   ~question, ~answer,
-#   "Why Plan?", "A logical and orderly way to think about the future",
-#   "Why Plan?", "Today's decisions have future consequences so we need to plan before we manage and implement",
-#   "Net Present Value of DRB?", "$683 Billion"
-# )
-
 dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  dplyr::mutate(answer = as.character(answer))
 
 ui <- tagList(
   useShinyjs(),
@@ -30,14 +24,14 @@ ui <- tagList(
         class = "btn-primary",
         width = "100%"
       ),
-      shinyjs::hidden(
-        actionButton(
-          inputId = "back_to_question",
-          label = "Back to Question",
-          class = "btn-primary",
-          width = "100%"
-        )
-      ),
+      # shinyjs::hidden(
+      #   actionButton(
+      #     inputId = "back_to_question",
+      #     label = "Back to Question",
+      #     class = "btn-primary",
+      #     width = "100%"
+      #   )
+      # ),
       # actionButton(
       #   inputId = "next_question",
       #   label = "Next Question",
@@ -128,20 +122,30 @@ server <- function(input, output, session){
   })
   
   observeEvent(input$show_answer, {
+    if (rv$question_visible){
+      rv$answer_visible <- TRUE
+      rv$question_visible <- FALSE
+      
+      updateActionButton(session, "show_answer", label = "Back to Question")
+      # shinyjs::hide("show_answer")
+      # shinyjs::show("back_to_question")
+    } else if (rv$answer_visible){
+      rv$answer_visible <- FALSE
+      rv$question_visible <- TRUE
+      
+      updateActionButton(session, "show_answer", label = "Show Answer")
+    }
+    
     # rv$answer_click <- rv$answer_click + 1
-    rv$answer_visible <- TRUE
-    rv$question_visible <- FALSE
-    shinyjs::hide("show_answer")
-    shinyjs::show("back_to_question")
+    
   })
   
-  observeEvent(input$back_to_question, {
-    # rv$question_click <- rv$question_click + 1
-    rv$answer_visible <- FALSE
-    rv$question_visible <- TRUE
-    shinyjs::hide("back_to_question")
-    shinyjs::show("show_answer")
-  })
+  # observeEvent(input$back_to_question, {
+  #   # rv$question_click <- rv$question_click + 1
+  #   
+  #   shinyjs::hide("back_to_question")
+  #   shinyjs::show("show_answer")
+  # })
   
   observeEvent(input$next_question, {
     if (rv$answer_visible){
