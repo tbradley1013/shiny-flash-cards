@@ -2,13 +2,18 @@ library(tidyverse)
 library(shiny)
 library(shinyjs)
 library(shinythemes)
+library(readxl)
+library(janitor)
 
-dat <- tribble(
-  ~question, ~answer,
-  "Why Plan?", "A logical and orderly way to think about the future",
-  "Why Plan?", "Today's decisions have future consequences so we need to plan before we manage and implement",
-  "Net Present Value of DRB?", "$683 Billion"
-)
+# dat <- tribble(
+#   ~question, ~answer,
+#   "Why Plan?", "A logical and orderly way to think about the future",
+#   "Why Plan?", "Today's decisions have future consequences so we need to plan before we manage and implement",
+#   "Net Present Value of DRB?", "$683 Billion"
+# )
+
+dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>% 
+  janitor::clean_names()
 
 ui <- tagList(
   useShinyjs(),
