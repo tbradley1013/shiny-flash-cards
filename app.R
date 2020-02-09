@@ -18,27 +18,18 @@ ui <- tagList(
     includeCSS("www/styles.css"),
     includeScript("www/button_click.js"),
     div(
+      h3("Shiny Flash Cards"),
+      h5("An application designed to make memorization easier!"),
+      style = "text-align:center;"
+    ),
+    div(
       actionButton(
         inputId = "show_answer",
         label = "Show Answer",
         class = "btn-primary",
         width = "100%"
       ),
-      # shinyjs::hidden(
-      #   actionButton(
-      #     inputId = "back_to_question",
-      #     label = "Back to Question",
-      #     class = "btn-primary",
-      #     width = "100%"
-      #   )
-      # ),
-      # actionButton(
-      #   inputId = "next_question",
-      #   label = "Next Question",
-      #   class = "btn-error",
-      #   width = "45%"
-      # ),
-      style = "width:200px;margin:0 auto;"
+      style = "width:200px;margin:10px auto 0;"
     ),
     br(),
     uiOutput("card"),
@@ -57,6 +48,11 @@ ui <- tagList(
         width = "45%"
       ),
       style = "width:400px;margin: 0 auto;"
+    ),
+    div(
+      tags$p(tags$kbd("a"), ": Toggle Question/Answer"),
+      tags$p(tags$kbd("d"), ": Next Question"),
+      tags$p(tags$kbd("w"), ": I Know it!")
     )
   )
 )
@@ -72,8 +68,6 @@ server <- function(input, output, session){
     question_visible = TRUE,
     card_keep = numeric(0),
     card_know = numeric(0)
-    # answer_click = 0,
-    # question_click = 1
   )
   
   observe({
@@ -112,7 +106,6 @@ server <- function(input, output, session){
   
   output$card <- renderUI({
     req(rv$n)
-    # browser()
     selected_card <- card_html()[rv$n,]
     if (rv$question_visible){
       return(tagList(selected_card$question[[1]]))
@@ -126,9 +119,7 @@ server <- function(input, output, session){
       rv$answer_visible <- TRUE
       rv$question_visible <- FALSE
       
-      updateActionButton(session, "show_answer", label = "Back to Question")
-      # shinyjs::hide("show_answer")
-      # shinyjs::show("back_to_question")
+      updateActionButton(session, "show_answer", label = "Show Question")
     } else if (rv$answer_visible){
       rv$answer_visible <- FALSE
       rv$question_visible <- TRUE
@@ -136,21 +127,13 @@ server <- function(input, output, session){
       updateActionButton(session, "show_answer", label = "Show Answer")
     }
     
-    # rv$answer_click <- rv$answer_click + 1
-    
   })
-  
-  # observeEvent(input$back_to_question, {
-  #   # rv$question_click <- rv$question_click + 1
-  #   
-  #   shinyjs::hide("back_to_question")
-  #   shinyjs::show("show_answer")
-  # })
   
   observeEvent(input$next_question, {
     if (rv$answer_visible){
       rv$answer_visible <- FALSE
       rv$question_visible <- TRUE
+      updateActionButton(session, "show_answer", label = "Show Answer")
     }
     
     rv$card_keep <- c(rv$card_keep, rv$n)
@@ -164,8 +147,6 @@ server <- function(input, output, session){
       rv$n <- sample(rv$card_idx, 1)
     }
     
-    shinyjs::show("show_answer")
-    shinyjs::hide("back_to_question")
   })
   
   observeEvent(input$know_it, {
@@ -191,8 +172,6 @@ server <- function(input, output, session){
       }
     }
     
-    shinyjs::show("show_answer")
-    shinyjs::hide("back_to_question")
   })
   
 }
