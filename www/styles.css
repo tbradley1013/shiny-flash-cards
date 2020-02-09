@@ -16,4 +16,5 @@
   color:#36567F;
   font-size: 3em;
   margin: 0 auto;
+  overflow-y:scroll;
 }
