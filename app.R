@@ -21,6 +21,7 @@ ui <- tagList(
   fluidPage(
     theme = shinytheme("journal"),
     includeCSS("www/styles.css"),
+    includeScript("www/button_click.js"),
     div(
       actionButton(
         inputId = "show_answer",
@@ -73,8 +74,10 @@ server <- function(input, output, session){
     dat = dat,
     n_cards = length(unique(dat$question)),
     n = 1,
-    answer_click = 0,
-    question_click = 1
+    answer_visible = FALSE,
+    question_visible = TRUE
+    # answer_click = 0,
+    # question_click = 1
   )
   
   card_html <- reactive({
@@ -85,6 +88,7 @@ server <- function(input, output, session){
           tagList(
             tags$div(
               class = "question-card",
+              id = "question-div",
               tags$div(
                 class = "question",
                 .x
@@ -110,28 +114,33 @@ server <- function(input, output, session){
     rv$n
     # browser()
     selected_card <- card_html()[rv$n,]
-    if (rv$question_click > rv$answer_click){
+    if (rv$question_visible){
       return(tagList(selected_card$question[[1]]))
-    } else {
+    } else if (rv$answer_visible) {
       return(tagList(selected_card$answer[[1]]))
     }
   })
   
   observeEvent(input$show_answer, {
-    rv$answer_click <- rv$answer_click + 1
+    # rv$answer_click <- rv$answer_click + 1
+    rv$answer_visible <- TRUE
+    rv$question_visible <- FALSE
     shinyjs::hide("show_answer")
     shinyjs::show("back_to_question")
   })
   
   observeEvent(input$back_to_question, {
-    rv$question_click <- rv$question_click + 1
+    # rv$question_click <- rv$question_click + 1
+    rv$answer_visible <- FALSE
+    rv$question_visible <- TRUE
     shinyjs::hide("back_to_question")
     shinyjs::show("show_answer")
   })
   
   observeEvent(input$next_question, {
-    if (rv$question_click == rv$answer_click){
-      rv$question_click <- rv$question_click + 1
+    if (rv$answer_visible){
+      rv$answer_visible <- FALSE
+      rv$question_visible <- TRUE
     }
     
     if (rv$n < rv$n_cards){
