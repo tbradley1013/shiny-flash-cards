@@ -23,5 +23,5 @@ document.onkeydown = function (e) {
 	  return;
 	  
   button.click();
- }
+ };
  
