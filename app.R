@@ -5,6 +5,7 @@ library(shinythemes)
 library(readxl)
 library(janitor)
 library(shinyalert)
+# library(bsplus)
 
 dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>% 
   janitor::clean_names() %>% 
@@ -19,9 +20,15 @@ ui <- tagList(
     tags$link(href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap", rel="stylesheet")
   ),
   fluidPage(
-    theme = shinytheme("journal"),
     includeCSS("www/styles.css"),
     includeScript("www/button_click.js"),
+    div(
+      id = "links-div",
+      tags$a(
+        icon("github"),
+        href = "https://github.com/tbradley1013/shiny-flash-cards"
+      )
+    ),
     div(
       h3("Shiny Flash Cards"),
       h5("An application designed to make memorization easier!"),
