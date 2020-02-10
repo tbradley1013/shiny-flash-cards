@@ -13,6 +13,11 @@ dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>%
 ui <- tagList(
   useShinyjs(),
   useShinyalert(),
+  tags$head(
+    tags$link(href='http://fonts.googleapis.com/css?family=Merienda+One', rel='stylesheet', type='text/css'),
+    tags$link(href='http://fonts.googleapis.com/css?family=Lobster+Two', rel='stylesheet', type='text/css'),
+    tags$link(href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap", rel="stylesheet")
+  ),
   fluidPage(
     theme = shinytheme("journal"),
     includeCSS("www/styles.css"),
