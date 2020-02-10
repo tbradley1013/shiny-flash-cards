@@ -76,7 +76,7 @@ server <- function(input, output, session){
   rv <- reactiveValues(
     dat = dat,
     n_cards = length(unique(dat$question)),
-    card_idx = 1:length(unique(dat$question)),
+    # card_idx = 1:length(unique(dat$question)),
     answer_visible = FALSE,
     question_visible = TRUE,
     card_keep = numeric(0),
@@ -150,14 +150,10 @@ server <- function(input, output, session){
       updateActionButton(session, "show_answer", label = "Show Answer")
     }
     
-    # rv$card_keep <- c(rv$card_keep, rv$n)
-    # rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
     
     if (length(rv$card_idx) > rv$n){
       rv$n <- rv$n + 1
     } else {
-      # rv$card_idx <- rv$card_keep
-      # rv$card_keep <- numeric(0)
       rv$n <- 1
     }
     
@@ -176,8 +172,6 @@ server <- function(input, output, session){
       rv$n <- rv$n + 1
     } else {
       if (length(rv$card_idx) > 0){
-        # rv$card_idx <- rv$card_keep
-        # rv$card_keep <- numeric(0)
         rv$n <- 1
       } else {
         shinyalert::shinyalert(title = "Congrats!", text = "You have indicated that you know all of the cards! The deck will now be reset!", type = "success")
