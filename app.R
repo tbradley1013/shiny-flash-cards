@@ -75,6 +75,7 @@ server <- function(input, output, session){
   
   rv <- reactiveValues(
     dat = dat,
+    n_cards = length(unique(dat$question)),
     card_idx = 1:length(unique(dat$question)),
     answer_visible = FALSE,
     question_visible = TRUE,
@@ -83,7 +84,8 @@ server <- function(input, output, session){
   )
   
   observe({
-    rv$n <- sample(rv$card_idx, 1)
+    rv$card_idx <- sample(1:rv$n_cards, rv$n_cards)
+    rv$n <- 1
   })
   
   card_html <- reactive({
@@ -118,7 +120,7 @@ server <- function(input, output, session){
   
   output$card <- renderUI({
     req(rv$n)
-    selected_card <- card_html()[rv$n,]
+    selected_card <- card_html()[rv$card_idx[rv$n],]
     if (rv$question_visible){
       return(tagList(selected_card$question[[1]]))
     } else if (rv$answer_visible) {
@@ -148,15 +150,15 @@ server <- function(input, output, session){
       updateActionButton(session, "show_answer", label = "Show Answer")
     }
     
-    rv$card_keep <- c(rv$card_keep, rv$n)
-    rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
+    # rv$card_keep <- c(rv$card_keep, rv$n)
+    # rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
     
-    if (length(rv$card_idx) > 0){
-      rv$n <- sample(rv$card_idx, 1)
+    if (length(rv$card_idx) > rv$n){
+      rv$n <- rv$n + 1
     } else {
-      rv$card_idx <- rv$card_keep
-      rv$card_keep <- numeric(0)
-      rv$n <- sample(rv$card_idx, 1)
+      # rv$card_idx <- rv$card_keep
+      # rv$card_keep <- numeric(0)
+      rv$n <- 1
     }
     
   })
@@ -167,20 +169,20 @@ server <- function(input, output, session){
       rv$question_visible <- TRUE
     }
     
-    rv$card_know <- c(rv$card_know, rv$n)
-    rv$card_idx <- rv$card_idx[rv$card_idx != rv$n]
+    rv$card_know <- c(rv$card_know, rv$card_idx[rv$n])
+    rv$card_idx <- rv$card_idx[-rv$n]
     
-    if (length(rv$card_idx) > 0){
-      rv$n <- sample(rv$card_idx, 1)
+    if (length(rv$card_idx) > rv$n){
+      rv$n <- rv$n + 1
     } else {
-      if (length(rv$card_keep) > 0){
-        rv$card_idx <- rv$card_keep
-        rv$card_keep <- numeric(0)
-        rv$n <- sample(rv$card_idx, 1)
+      if (length(rv$card_idx) > 0){
+        # rv$card_idx <- rv$card_keep
+        # rv$card_keep <- numeric(0)
+        rv$n <- 1
       } else {
         shinyalert::shinyalert(title = "Congrats!", text = "You have indicated that you know all of the cards! The deck will now be reset!", type = "success")
-        rv$card_idx <- rv$card_know
-        rv$n <- sample(rv$card_idx, 1)
+        rv$card_idx <- sample(rv$card_know, length(rv$card_know))
+        rv$n <- 1
       }
     }
     
