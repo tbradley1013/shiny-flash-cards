@@ -174,6 +174,7 @@ server <- function(input, output, session){
     
     rv$card_know <- c(rv$card_know, rv$card_idx[rv$n])
     rv$card_idx <- rv$card_idx[-rv$n]
+    updateActionButton(session, "show_answer", label = "Show Answer")
     
     if (length(rv$card_idx) > rv$n){
       rv$n <- rv$n + 1
