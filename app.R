@@ -34,32 +34,39 @@ ui <- tagList(
       h4("An application designed to make memorization easier!"),
       style = "text-align:center;"
     ),
-    div(
-      actionButton(
-        inputId = "show_answer",
-        label = "Show Answer",
-        class = "btn-primary btn-lg",
-        width = "100%"
-      ),
-      style = "width:200px;margin:10px auto 0;"
-    ),
+    # div(
+    #   actionButton(
+    #     inputId = "show_answer",
+    #     label = "Show Answer",
+    #     class = "btn-primary btn-lg",
+    #     width = "100%"
+    #   ),
+    #   style = "width:200px;margin:10px auto 0;"
+    # ),
     br(),
     uiOutput("card"),
     br(),
-    div(
+    fluidRow(
       actionButton(
         inputId = "know_it",
         label = "I know it!",
         class = "btn-success btn-lg",
-        width = "45%" 
+        width = "33%" 
+      ),
+      actionButton(
+        inputId = "show_answer",
+        label = "Show Answer",
+        class = "btn-primary btn-lg",
+        width = "33%"
       ),
       actionButton(
         inputId = "next_question",
         label = "Next Question",
         class = "btn-danger btn-lg",
-        width = "45%"
+        width = "33%"
       ),
-      style = "width:400px;margin: 0 auto;"
+      inline = TRUE,
+      style = "width:50%;margin: 0 auto;"
     ),
     div(
       tags$p(tags$kbd("a"), ": Toggle Question/Answer"),
