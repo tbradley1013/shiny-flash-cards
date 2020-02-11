@@ -24,6 +24,11 @@ html, body {
   height:100%;
 }
 
+.fa-github {
+  font-size:30px;
+  color:black;
+}
+
 .answers-card {
   width:80%;
   height:calc(60vh) !important;

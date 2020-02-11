@@ -30,15 +30,15 @@ ui <- tagList(
       )
     ),
     div(
-      h3("Shiny Flash Cards"),
-      h5("An application designed to make memorization easier!"),
+      h2("Shiny Flash Cards"),
+      h4("An application designed to make memorization easier!"),
       style = "text-align:center;"
     ),
     div(
       actionButton(
         inputId = "show_answer",
         label = "Show Answer",
-        class = "btn-primary",
+        class = "btn-primary btn-lg",
         width = "100%"
       ),
       style = "width:200px;margin:10px auto 0;"
@@ -50,13 +50,13 @@ ui <- tagList(
       actionButton(
         inputId = "know_it",
         label = "I know it!",
-        class = "btn-success",
+        class = "btn-success btn-lg",
         width = "45%" 
       ),
       actionButton(
         inputId = "next_question",
         label = "Next Question",
-        class = "btn-danger",
+        class = "btn-danger btn-lg",
         width = "45%"
       ),
       style = "width:400px;margin: 0 auto;"
