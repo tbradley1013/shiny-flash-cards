@@ -1,11 +1,9 @@
 library(tidyverse)
 library(shiny)
 library(shinyjs)
-# library(shinythemes)
 library(readxl)
 library(janitor)
 library(shinyalert)
-# library(bsplus)
 
 dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>%
   janitor::clean_names() %>%
