@@ -22,13 +22,15 @@ adv_r_deck <- purrr::map_dfr(chapters, ~{
     html_nodes(".page-wrapper [id*=quiz] li") %>% 
     # html_nodes("li") %>% 
     as.character() %>% 
-    stringr::str_replace_all("^<li>|</li>$", "")
+    stringr::str_replace_all("^<li>|</li>$", "") %>% 
+    stringr::str_replace_all("href=\"", "href=\"https://adv-r.hadley.nz/")
   
   answers <- chapter_html %>% 
     html_nodes(".page-wrapper [id*=answer] li") %>% 
     # html_nodes("li") %>% 
     as.character() %>% 
-    stringr::str_replace_all("^<li>|</li>$", "")
+    stringr::str_replace_all("^<li>|</li>$", "") %>% 
+    stringr::str_replace_all("href=\"", "href=\"https://adv-r.hadley.nz/")
   
   if (length(questions) != length(answers)){
     return(NULL)
@@ -44,29 +46,23 @@ adv_r_deck <- purrr::map_dfr(chapters, ~{
     category = str_replace(.x, "\\.html", "")
   )
   
-  # out <- list(
-  #   questions = questions,
-  #   answers = answers, 
-  #   category = str_replace(.x, "\\.html", "")
-  # )
-  
   return(out)
 })
 
 write_rds(adv_r_deck, "data/adv-r-deck.rds", compress = "xz", compression = 9L)
 
-url <- "https://adv-r.hadley.nz/vectors-chap.html"
+url <- "https://adv-r.hadley.nz/functions.html#function-answers"
 
 html <- read_html(url)
 
 
 
-html %>% 
-  html_nodes(".page-wrapper [id*=quiz] li") %>% 
-  # html_nodes("li") %>% 
+html %>%
+  html_nodes(".page-wrapper [id*=quiz] li") %>%
+  # html_nodes("li") %>%
   as.character()
 
-html %>% 
-  html_nodes(".page-wrapper [id*=answer] li") %>% 
-  # html_nodes("li") %>% 
+html %>%
+  html_nodes(".page-wrapper [id*=answer] li") %>%
+  # html_nodes("li") %>%
   as.character()
