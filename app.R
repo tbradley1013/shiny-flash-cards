@@ -7,9 +7,11 @@ library(janitor)
 library(shinyalert)
 # library(bsplus)
 
-dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>% 
-  janitor::clean_names() %>% 
+dat <- readxl::read_excel("data/drbc-deck-1.xlsx") %>%
+  janitor::clean_names() %>%
   dplyr::mutate(answer = as.character(answer))
+
+# dat <- readr::read_rds("data/adv-r-deck.rds")
 
 ui <- tagList(
   useShinyjs(),
@@ -106,7 +108,7 @@ server <- function(input, output, session){
               id = "question-div",
               tags$div(
                 class = "question",
-                .x
+                HTML(.x)
               )
             )
           )
